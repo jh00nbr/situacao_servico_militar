@@ -19,7 +19,6 @@ Twitter @jh00nbr
 Simples script para acompanhamento de situação no serviço militar através do CPF ou RA.
 RA - Registro de Alistamento
 """
-
 __author__ = "Jhonathan Davi A.K.A jh00nbr"
 __email__ = "jdavi@insightsecurity.com.br"
 
@@ -57,9 +56,19 @@ def formatar_dataNascimento(data_char):
     data_n = str(data_char).split()
     return data_n[2]+'/'+meses[data_n[1]]+'/'+data_n[5]
 
+ra,cpf = '',''
+
+if len(sys.argv[1]) == 11:
+    cpf = str(sys.argv[1])
+elif len(sys.argv[1]) ==12:
+    ra = str(sys.argv[1])
+else:
+    print "[!] Ops, você esqueceu do cpf(11 chars) ou o ra(12 chars), Ex: python situacao_militar.py 00000000000 ou 111111111111"
+    sys.exit()
+
 
 config = {'url':'http://www.alistamento.eb.mil.br/cidadao/situacao.action'}
-payload = {'cidadao.ra':'','cidadao.cpf':sys.argv[1]}
+payload = {'cidadao.ra':ra,'cidadao.cpf':cpf}
 header = {'Referer':'http://www.alistamento.eb.mil.br/cidadao/situacao.action','User-Agent':random.choice(carregar_useragents())}
 dados = ['RA','nome','dataNascimento','situacao']
 
@@ -67,10 +76,11 @@ req = requests.post(config['url'],data=payload,headers=header)
 
 try:
     soup = BeautifulSoup(req.content,'html.parser')
-	  result = soup.find('div',{'class':'panel panel-primary'})
-	  conteudo = [remover_palavras_chatas(remover_tags(str(b))) for b in result.findAll('li')]
+    result = soup.find('div',{'class':'panel panel-primary'})
+    conteudo = [remover_palavras_chatas(remover_tags(str(b))) for b in result.findAll('li')]
     dados = dict(zip(dados,conteudo))
     dados_retorno = {'dataNascimento': formatar_dataNascimento(dados['dataNascimento']), 'situacao': dados['situacao'],'RA': dados['RA'],'nome':dados['nome']}
     print dados_retorno
 except Exception:
-	  print "[!] Registros não encontrados!"
+    print "[!] Registros não encontrados!"
+
