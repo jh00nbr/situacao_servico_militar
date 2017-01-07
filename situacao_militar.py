@@ -83,4 +83,3 @@ try:
     print dados_retorno
 except Exception:
     print "[!] Registros não encontrados!"
-
