@@ -8,6 +8,7 @@ from unicodedata import normalize
 
 """
 jdavi@insightsecurity.com.br
+jh00nbr: jhonathandavi.com.br
 Insightl4b - http://lab.insightsecurity.com.br 
 Blog: lab.insightsecurity.com.br
 Github: http://github.com/jh00nbr
